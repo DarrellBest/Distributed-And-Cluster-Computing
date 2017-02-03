@@ -1,0 +1,6 @@
+Team Members
+CPSC 3620 Distributed and Cluster Computing
+
+1. Darrell Best
+2. Steven Nix
+3. Earl Honeycutt
