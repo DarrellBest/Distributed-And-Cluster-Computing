@@ -1,11 +1,18 @@
 # These are our list of chosen file systems and are listed from most desirable to least desirable from top to bottom.
 
-Gordon Compute Cluster (gordon.sdsc.teragrid.org)
+Greenfield (greenfield.psc.xsede.org) Cluster
+  1. URL of Manual: https://www.psc.edu/index.php/greenfield
+  2. CentOS
+  3. Torque
+  4. PSC ?
+  Notes: Similar to Palmetto Cluster.
+
+Gordon Compute Cluster (gordon.sdsc.teragrid.org) Cluster
   1. URL of Manual: https://portal.xsede.org/sdsc-gordon
   2. Linux/Rocks
   3. Torque
   4. Lustre
-  Notes: similar to Palmetto Cluster. Uses both Torque and PBS.
+  Notes: similar to Palmetto Cluster.
 
 Stampede (stampede.tacc.xsede.org) Cluster
   1. URL of Manual: https://portal.xsede.org/tacc-stampede
