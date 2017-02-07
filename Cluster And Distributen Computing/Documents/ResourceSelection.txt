@@ -1,0 +1,24 @@
+# These are our list of chosen file systems and are listed from most desirable to least desirable from top to bottom.
+
+Gordon Compute Cluster (gordon.sdsc.teragrid.org)
+  1. URL of Manual: https://portal.xsede.org/sdsc-gordon
+  2. Linux/Rocks
+  3. Torque
+  4. Lustre
+  Notes: similar to Palmetto Cluster. Uses both Torque and PBS.
+
+Stampede (stampede.tacc.xsede.org) Cluster
+  1. URL of Manual: https://portal.xsede.org/tacc-stampede
+  2. Linux (CentOS)
+  3. SLURM
+  4. Lustre
+
+Wrangler (wrangler.tacc.xsede.org) Cluster
+  1. URL of Manual: https://portal.xsede.org/tacc-wrangler
+  2. OS: Linux (CentOS)
+  3. SLURM
+  4. Lustre
+  Notes: Also utilizes hadoop
+  
+
+  
