@@ -68,11 +68,11 @@ for i in range(params.workerCount + 2):
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo apt-get install -y nfs-kernel-server"))
 		node.addService(rspec.Execute(shell="/bin/sh",
+								command="sudo chmod 777 /home"))
+		node.addService(rspec.Execute(shell="/bin/sh",
 								command="echo '/home *(rw,sync,no_root_squash)' | sudo tee -a /etc/exports"))
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo systemctl restart nfs-kernel-server"))
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo chmod 777 /home"))
 	else:
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo apt-get install -y nfs-common"))
