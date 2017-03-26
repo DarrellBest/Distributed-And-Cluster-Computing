@@ -68,13 +68,17 @@ for i in range(params.workerCount + 2):
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo apt-get install -y nfs-kernel-server"))
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="echo \"/home *(rw,sync,no_root_squash)\" | sudo tee -a /etc/exports >> /dev/null"))
+								command="echo '/home *(rw,sync,no_root_squash)' | sudo tee -a /etc/exports"))
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo systemctl start nfs-kernel-server.service"))
+								command="sudo systemctl restart nfs-kernel-server"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="sudo chmod 777 /home"))
 	else:
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo apt-get install -y nfs-common"))
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="echo \"192.168.1.2:/home /local/home nfs rsize=8192,wsize=8192,timeo=14,intr\" | sudo tee -a /etc/exports >> /dev/null"))
+								command="sudo mkdir -p /nfs/home"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="sudo mount 192.168.1.2:/home /nfs/home"))
 # Print the RSpec to the enclosing page.
 portal.context.printRequestRSpec(request)
