@@ -117,11 +117,11 @@ for i in range(params.workerCount + 2):
 		
 		#add work nodes to server
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="echo 'node1 np=4' | sudo tee -a /var/spool/torque/server_priv/nodes"))		
+								command="echo 'node2 np=4' | sudo tee /var/spool/torque/server_priv/nodes"))		
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="echo 'node2 np=4' | sudo tee -a /var/spool/torque/server_priv/nodes"))
+								command="echo 'node3 np=4' | sudo tee -a /var/spool/torque/server_priv/nodes"))
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="echo 'node3 np=4' | sudo tee -a /var/spool/torque/server_priv/nodes"))								
+								command="echo 'node4 np=4' | sudo tee -a /var/spool/torque/server_priv/nodes"))								
 		#configure mom
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="echo 'geniuser@controllerHost-lan' | sudo tee /var/spool/torque/mom_priv/config"))
@@ -162,8 +162,8 @@ for i in range(params.workerCount + 2):
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="qmgr -c 'set server allow_node_submit = true'"))
 		#reboot server
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="yes | sudo reboot"))					
+		#node.addService(rspec.Execute(shell="/bin/sh",
+		#						command="yes | sudo reboot"))					
 	elif i != 1:
 		#apt-get install torque
 		node.addService(rspec.Execute(shell="/bin/sh",
@@ -173,13 +173,13 @@ for i in range(params.workerCount + 2):
 								command="/etc/init.d/torque-mom stop"))
 		#point client to server
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="echo 'controllerHost-lan' | sudo tee -a /etc/torque/server_name"))
+								command="echo 'controllerHost-lan' | sudo tee /etc/torque/server_name"))
 		#start torque-mom
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="/etc/init.d/torque-mom start"))
 		#reboot clients
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="yes | sudo reboot"))
+		#node.addService(rspec.Execute(shell="/bin/sh",
+		#						command="yes | sudo reboot"))
 
 # Print the RSpec to the enclosing page.
 portal.context.printRequestRSpec(request)
