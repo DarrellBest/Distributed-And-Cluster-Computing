@@ -83,13 +83,11 @@ for i in range(params.workerCount + 2):
 								
 	if i == 0:
 		#must be in root to install torque
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo su"))
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="mkdir test"))
+		#node.addService(rspec.Execute(shell="/bin/sh",
+		#						command="sudo su"))
 		#apt-get install torque
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="yes | apt-get install torque-server torque-client torque-mom torque-pam"))
+								command="sudo apt-get install -y torque-server torque-client torque-mom torque-pam"))
 		#stop the default torque server
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="/etc/init.d/torque-mom stop"))
@@ -102,22 +100,33 @@ for i in range(params.workerCount + 2):
 								command="yes | pbs_server -t create"))
 		#kill custom torque server
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="killall pbs_server"))
-		#make custom domain in hosts file for torque purposes
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="echo '192.168.1.1 SERVER.DOMAIN' | sudo tee -a /etc/hosts"))
+								command="killall pbs_server"))		
 		#configure torque server
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="echo 'SERVER.DOMAIN' | sudo tee -a /etc/torque/server_name"))
+								command="echo 'controllerHost-lan' | sudo tee /etc/torque/server_name"))
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="echo 'SERVER.DOMAIN' | sudo tee -a /var/spool/torque/server_priv/acl_svr/acl_hosts"))
+								command="echo 'controllerHost-lan' | sudo tee /var/spool/torque/server_priv/acl_svr/acl_hosts"))
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="echo 'root@SERVER.DOMAIN' | sudo tee -a /var/spool/torque/server_priv/acl_svr/operators"))
+								command="echo 'geniuser@controllerHost-lan' | sudo tee /var/spool/torque/server_priv/acl_svr/operators"))
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="echo 'root@SERVER.DOMAIN' | sudo tee -a /var/spool/torque/server_priv/acl_svr/managers"))
+								command="echo 'geniuser@controllerHost-lan' | sudo tee /var/spool/torque/server_priv/acl_svr/managers"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="echo 'root@controllerHost-lan' | sudo tee -a /var/spool/torque/server_priv/acl_svr/operators"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="echo 'root@controllerHost-lan' | sudo tee -a /var/spool/torque/server_priv/acl_svr/managers"))
+		
+		#add work nodes to server
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="echo 'node1 np=4' | sudo tee -a /var/spool/torque/server_priv/nodes"))		
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="echo 'node2 np=4' | sudo tee -a /var/spool/torque/server_priv/nodes"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="echo 'node3 np=4' | sudo tee -a /var/spool/torque/server_priv/nodes"))								
 		#configure mom
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="echo 'root@SERVER.DOMAIN' | sudo tee -a /var/spool/torque/mom_priv/config"))
+								command="echo 'geniuser@controllerHost-lan' | sudo tee /var/spool/torque/mom_priv/config"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="echo 'root@controllerHost-lan' | sudo tee -a /var/spool/torque/mom_priv/config"))
 		#start torque
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="/etc/init.d/torque-mom start"))
@@ -127,11 +136,11 @@ for i in range(params.workerCount + 2):
 								command="/etc/init.d/torque-server start"))	
 		#set scheduling properties
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="qmgr -c 'set server scheduling = true'"))
+								command="qmgr -c 'set server scheduling = True'"))
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="qmgr -c 'set server keep_completed = 300'"))
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="qmgr -c 'set server mom_job_sync = true'"))
+								command="qmgr -c 'set server mom_job_sync = True'"))
 		#create default queue
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="qmgr -c 'create queue batch'"))
@@ -149,8 +158,28 @@ for i in range(params.workerCount + 2):
 								command="qmgr -c 'set server default_queue = batch'"))	
 		#configure submission pool
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="qmgr -c 'set server submit_hosts = SERVER'"))
+								command="qmgr -c 'set server submit_hosts = controllerHost-lan'"))
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="qmgr -c 'set server allow_node_submit = true'"))								
+								command="qmgr -c 'set server allow_node_submit = true'"))
+		#reboot server
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="yes | reboot"))					
+	elif i != 1:
+		#apt-get install torque
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="sudo apt-get install -y torque-client torque-mom"))
+		#stop torque-mom
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="/etc/init.d/torque-mom stop"))
+		#point client to server
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="echo 'controllerHost-lan' | sudo tee -a /etc/torque/server_name"))
+		#start torque-mom
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="/etc/init.d/torque-mom start"))
+		#reboot clients
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="yes | reboot"))
+
 # Print the RSpec to the enclosing page.
 portal.context.printRequestRSpec(request)
