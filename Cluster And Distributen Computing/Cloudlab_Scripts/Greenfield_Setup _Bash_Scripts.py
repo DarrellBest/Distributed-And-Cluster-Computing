@@ -64,28 +64,16 @@ for i in range(params.workerCount + 2):
 									command="sudo adduser greenfield sudo"))
 	node.addService(rspec.Execute(shell="/bin/sh",
 									command="sudo apt-get update"))
+	#setup nfs and password free ssh
+	#server
 	if i == 1:
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo apt-get install -y nfs-kernel-server"))
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo chmod 777 /home"))
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="echo '/home *(rw,sync,no_root_squash)' | sudo tee -a /etc/exports"))
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo systemctl restart nfs-kernel-server"))
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="ssh-keygen -t rsa -P '' -f '~/.ssh' "))
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="cd .ssh"))	
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="cp id_rsa.pub authorized_keys"))			
+								command="wget"))	
+	#client								
 	else:
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo apt-get install -y nfs-common"))
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo mkdir -p /nfs/home"))
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo mount 192.168.1.2:/home /nfs/home"))
+								command="wget"))
+
 								
 	if i == 0:
 		#must be in root to install torque
