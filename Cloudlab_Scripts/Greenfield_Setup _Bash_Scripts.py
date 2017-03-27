@@ -68,7 +68,7 @@ for i in range(params.workerCount + 2):
 	#server
 	if i == 1:
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="wget"))	
+								command="wget 'https://github.com/DarrellBest/Distributed-And-Cluster-Computing/blob/master/Cluster And Distributen Computing/Cloudlab_Scripts/setup_nfs_server.sh' "))	
 	#client								
 	else:
 		node.addService(rspec.Execute(shell="/bin/sh",
