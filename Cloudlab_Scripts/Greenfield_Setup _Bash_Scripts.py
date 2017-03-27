@@ -68,12 +68,15 @@ for i in range(params.workerCount + 2):
 	#server
 	if i == 1:
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="wget 'https://github.com/DarrellBest/Distributed-And-Cluster-Computing/blob/master/Cluster And Distributen Computing/Cloudlab_Scripts/setup_nfs_server.sh' "))	
+								command="wget 'https://raw.githubusercontent.com/DarrellBest/Distributed-And-Cluster-Computing/master/Cloudlab_Scripts/setup_nfs_server.sh' "))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="./setup_nfs_server.sh"))
 	#client								
 	else:
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="wget"))
-
+								command="wget'https://raw.githubusercontent.com/DarrellBest/Distributed-And-Cluster-Computing/master/Cloudlab_Scripts/setup_nfs_clients.sh'"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="./setup_nfs_clients.sh"))
 								
 	if i == 0:
 		#must be in root to install torque
