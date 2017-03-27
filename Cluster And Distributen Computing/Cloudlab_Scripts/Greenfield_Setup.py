@@ -163,7 +163,7 @@ for i in range(params.workerCount + 2):
 								command="qmgr -c 'set server allow_node_submit = true'"))
 		#reboot server
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="yes | reboot"))					
+								command="yes | sudo reboot"))					
 	elif i != 1:
 		#apt-get install torque
 		node.addService(rspec.Execute(shell="/bin/sh",
@@ -179,7 +179,7 @@ for i in range(params.workerCount + 2):
 								command="/etc/init.d/torque-mom start"))
 		#reboot clients
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="yes | reboot"))
+								command="yes | sudo reboot"))
 
 # Print the RSpec to the enclosing page.
 portal.context.printRequestRSpec(request)
