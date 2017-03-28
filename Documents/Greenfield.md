@@ -17,6 +17,6 @@ shell scripts that are used to establish an architecture similar to that of the 
 3) Network File System (to emulate Greenfield's PSC NFS)
 4) Python and OpenMPI (and relevant dependencies)
 
-Notably, however, we chose to deploy our architecture using Ubuntu in lieu of CentOS - largely for ease-of-use.
+Notably, however, we chose to deploy our architecture using Ubuntu16 in lieu of CentOS66 - largely for ease-of-use and setup on our end.
 
 ### Validation Results
