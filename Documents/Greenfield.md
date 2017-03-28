@@ -14,9 +14,9 @@ shell scripts that are used to establish an architecture similar to that of the 
 
 1) Keyless SSH (for automation)
 2) Torque Resource Manager (for job management/scheduling)
-3) Network File System (to emulate Greenfield's Data Supercell)
+3) Network File System (to emulate Greenfield's PSC NFS)
 4) Python and OpenMPI (and relevant dependencies)
 
-Notably, however, we chose to deploy our architecture using Ubuntu instead of CentOS - largely for ease-of-use.
+Notably, however, we chose to deploy our architecture using Ubuntu in lieu of CentOS - largely for ease-of-use.
 
 ### Validation Results
