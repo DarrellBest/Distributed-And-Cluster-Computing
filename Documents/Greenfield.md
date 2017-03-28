@@ -1,4 +1,4 @@
-### Network Topology
+### Network Topology and Methodology
 
 ![alt text](http://i.imgur.com/QxfUvHE.png "Logo Title Text 1")
 
