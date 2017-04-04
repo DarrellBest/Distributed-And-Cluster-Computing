@@ -1,4 +1,4 @@
-####### Group 2 - Greenfield: Steven Nix, Darrell Best, Earl Honeycutt
+###### Group 2 - Greenfield: Steven Nix, Darrell Best, Earl Honeycutt
 
 ### Network Topology and Methodology
 
