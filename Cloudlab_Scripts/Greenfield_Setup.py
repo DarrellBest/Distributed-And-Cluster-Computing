@@ -97,7 +97,7 @@ for i in range(params.workerCount + 2):
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo mkdir -p /nfs/packages"))
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo mount 192.168.1.2:/home nfs/packages"))
+								command="sudo mount 192.168.1.2:/packages nfs/packages"))
 													
 	if i == 0:
 		#must be in root to install torque
