@@ -13,7 +13,7 @@ pc.defineParameter("controllerHost", "Name of controller node",
 					portal.ParameterType.STRING, "controllerHost", advanced=True,
 					longDescription="The short name of the controller node.	You shold leave this alone unless you really want the hostname to change.")
 					
-pc.defineParameter("database", "Name of controller node",
+pc.defineParameter("database", "Name of datbase",
 					portal.ParameterType.STRING, "database", advanced=True,
 					longDescription="The short name of the controller node.	You shold leave this alone unless you really want the hostname to change.")
 					
@@ -72,6 +72,12 @@ for i in range(params.workerCount + 2):
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="echo '/home *(rw,sync,no_root_squash)' | sudo tee -a /etc/exports"))
 		node.addService(rspec.Execute(shell="/bin/sh",
+								command="sudo mkdir /packages"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="sudo chmod 777 /packages"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="echo '/packages *(rw,sync,no_root_squash)' | sudo tee -a /etc/exports"))			
+		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo systemctl restart nfs-kernel-server"))
 		#shared ssh keys
 		node.addService(rspec.Execute(shell="/bin/sh",
@@ -89,7 +95,9 @@ for i in range(params.workerCount + 2):
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo mkdir -p /nfs/home"))
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo mount 192.168.1.2:/home /nfs/home"))
+								command="sudo mkdir -p /nfs/packages"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="sudo mount 192.168.1.2:/home nfs/packages"))
 													
 	if i == 0:
 		#must be in root to install torque
@@ -120,6 +128,7 @@ for i in range(params.workerCount + 2):
 								command="echo 'root@controllerHost-lan' | sudo tee -a /var/spool/torque/server_priv/acl_svr/operators"))
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="echo 'root@controllerHost-lan' | sudo tee -a /var/spool/torque/server_priv/acl_svr/managers"))
+							
 		
 		#add work nodes to server
 		node.addService(rspec.Execute(shell="/bin/sh",
@@ -131,6 +140,8 @@ for i in range(params.workerCount + 2):
 		#configure mom
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="echo 'root@controllerHost-lan' | sudo tee -a /var/spool/torque/mom_priv/config"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="echo '\$usecp *:/nfs/home /nfs/home' | sudo tee -a /var/spool/torque/mom_priv/config"))
 		#start torque
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo service torque-mom start"))
@@ -169,19 +180,23 @@ for i in range(params.workerCount + 2):
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo qmgr -c 'set server allow_node_submit = true'"))
 	
-	elif i != 1:	
+	elif i != 1 :	
 		#apt-get install torque
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo apt-get install -y torque-client torque-mom"))
 		#stop torque-mom
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo service torque-mom stop"))
+		#copy output to shared directory
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="echo '\$usecp *:$PWD $PWD' | sudo tee -a /var/spool/torque/mom_priv/config"))
 		#point client to server
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="echo 'controllerHost-lan' | sudo tee /etc/torque/server_name"))
 		#start torque-mom
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo service torque-mom start"))
-								
+
+	#install enviornment modules
+	node.addService(rspec.Execute(shell="/bin/sh",
+							command="sudo apt-get install -y environment-modules"))							
 # Print the RSpec to the enclosing page.
 portal.context.printRequestRSpec(request)
