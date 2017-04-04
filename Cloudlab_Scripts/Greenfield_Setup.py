@@ -182,7 +182,7 @@ for i in range(params.workerCount + 2):
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo qmgr -c 'set server allow_node_submit = true'"))
 	
-	elif i != 1 :	
+	elif i != 1 and i != 2 :	
 		#apt-get install torque
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo apt-get install -y torque-client torque-mom"))
@@ -196,7 +196,8 @@ for i in range(params.workerCount + 2):
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="echo 'controllerHost-lan' | sudo tee /etc/torque/server_name"))
 		#start torque-mom
-
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="sudo service torque-mom start"))
 	#install enviornment modules
 	node.addService(rspec.Execute(shell="/bin/sh",
 							command="sudo apt-get install -y environment-modules"))							
