@@ -80,14 +80,14 @@ for i in range(params.workerCount + 2):
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo systemctl restart nfs-kernel-server"))
 		#shared ssh keys
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="mkdir /home/.ssh"))								
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="ssh-keygen -t rsa -P '' -f '/home/.ssh/id_rsa' "))
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo chmod 777 /home/.ssh"))		
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="cp /home/.ssh/id_rsa.pub /home/.ssh/authorized_keys"))
+		#node.addService(rspec.Execute(shell="/bin/sh",
+		#						command="mkdir /home/.ssh"))								
+		#node.addService(rspec.Execute(shell="/bin/sh",
+		#						command="ssh-keygen -t rsa -P '' -f '/home/.ssh/id_rsa' "))
+		#node.addService(rspec.Execute(shell="/bin/sh",
+		#						command="sudo chmod 777 /home/.ssh"))		
+		#node.addService(rspec.Execute(shell="/bin/sh",
+		#						command="cp /home/.ssh/id_rsa.pub /home/.ssh/authorized_keys"))
 	else:
 	# install nfs client
 		node.addService(rspec.Execute(shell="/bin/sh",
@@ -97,9 +97,9 @@ for i in range(params.workerCount + 2):
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo mkdir -p /nfs/packages"))
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo mount 192.168.1.2:/home nfs/home"))
+								command="sudo mount 192.168.1.2:/home /nfs/home"))
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo mount 192.168.1.2:/packages nfs/packages"))
+								command="sudo mount 192.168.1.2:/packages /nfs/packages"))
 													
 	if i == 0:
 		#must be in root to install torque
@@ -182,7 +182,7 @@ for i in range(params.workerCount + 2):
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo qmgr -c 'set server allow_node_submit = true'"))
 	
-	elif i != 1 and i != 2 :	
+	elif i != 1 and i != 0:	
 		#apt-get install torque
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo apt-get install -y torque-client torque-mom"))
@@ -200,6 +200,32 @@ for i in range(params.workerCount + 2):
 								command="sudo service torque-mom start"))
 	#install enviornment modules
 	node.addService(rspec.Execute(shell="/bin/sh",
-							command="sudo apt-get install -y environment-modules"))							
+							command="sudo apt-get install -y environment-modules"))
+
+	#install programs to modules 
+	if i == 1:
+		#gcc
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="wget -P /packages/gcc/ mirrors-usa.go-parts.com/gcc/releases/gcc-6.3.0/gcc-6.3.0.tar.gz"))	
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="mkdir /packages/gcc/6.3.0"))									
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="tar -C /packages/gcc/ -xvf  /packages/gcc/gcc-6.3.0.tar.gz"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="sudo apt-get install -y libc6:i386 libstdc++6:i386"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="sudo apt-get install -y libmpc-dev"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="cd /packages/gcc/6.3.0 ; /packages/gcc/gcc-6.3.0/configure --prefix=/packages/gcc/6.3.0 --disable-multilib"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="cd /packages/gcc/6.3.0 ; make ; make install"))
+
+	#install module files
+	if i == 1 :
+		node.addService(rspec.Execute(shell="/bin/sh",
+						command="cd /usr/share/modules/modulefiles/ ; sudo mkdir gcc ; cd gcc ; "))
+	else:
+		node.addService(rspec.Execute(shell="/bin/sh",
+						command="cd /usr/share/modules/modulefiles/ ; sudo mkdir gcc ; cd gcc ; "))	
 # Print the RSpec to the enclosing page.
 portal.context.printRequestRSpec(request)

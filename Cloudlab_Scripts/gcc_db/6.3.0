@@ -1,0 +1,18 @@
+#%Module1.0
+proc ModulesHelp { } {
+global dotversion
+ 
+puts stderr "\tGCC 6.3.0 (gcc, g++, gfortran)"
+}
+ 
+module-whatis "GCC 6.3.0 (gcc, g++, gfortran)"
+conflict gcc
+prepend-path PATH /packages/gcc/4.6.2/bin
+prepend-path LD_LIBRARY_PATH /packages/gcc/4.6.2/lib64
+prepend-path LIBRARY_PATH /packages/gcc/4.6.2/lib64
+prepend-path MANPATH /packages/gcc/4.6.2/man
+setenv CC gcc
+setenv CXX g++
+setenv FC gfortran
+setenv F77 gfortran
+setenv F90 gfortran
