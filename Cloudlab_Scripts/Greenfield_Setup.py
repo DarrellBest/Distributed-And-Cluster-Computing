@@ -219,13 +219,52 @@ for i in range(params.workerCount + 2):
 								command="cd /packages/gcc/6.3.0 ; /packages/gcc/gcc-6.3.0/configure --prefix=/packages/gcc/6.3.0 --disable-multilib"))
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="cd /packages/gcc/6.3.0 ; make ; make install"))
+		
+		#python
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="wget -P /packages/python/ https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tgz"))	
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="mkdir /packages/python/2.7.13"))									
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="tar -C /packages/python/ -xvf  /packages/python/Python-2.7.13.tgz"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="cd /packages/python/2.7.13 ; /packages/python/Python-2.7.13/configure --prefix=/packages/python/2.7.13"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="cd /packages/python/2.7.13 ; make ; make install"))
+		
+		#openmpi
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="wget -P /packages/openmpi/ https://www.open-mpi.org/software/ompi/v2.1/downloads/openmpi-2.1.0.tar.gz"))	
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="mkdir /packages/openmpi/2.1.0"))									
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="tar -C /packages/openmpi/ -xvf  /packages/openmpi/openmpi-2.1.0.tar.gz"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="cd /packages/openmpi/2.1.0 ; /packages/openmpi/openmpi-2.1.0/configure --prefix=/packages/openmpi/2.1.0"))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="cd /packages/openmpi/2.1.0 ; make ; make install"))		
 
+								
 	#install module files
 	if i == 1 :
+		#gcc
 		node.addService(rspec.Execute(shell="/bin/sh",
-						command="cd /usr/share/modules/modulefiles/ ; sudo mkdir gcc ; cd gcc ; "))
+						command="cd /usr/share/modules/modulefiles/ ; sudo mkdir gcc ; cd gcc ; wget https://raw.githubusercontent.com/DarrellBest/Distributed-And-Cluster-Computing/master/Cloudlab_Scripts/gcc_db/6.3.0 "))
+		#python
+		node.addService(rspec.Execute(shell="/bin/sh",
+						command="cd /usr/share/modules/modulefiles/ ; sudo mkdir python ; cd python ; wget https://raw.githubusercontent.com/DarrellBest/Distributed-And-Cluster-Computing/master/Cloudlab_Scripts/python_db/2.7.13 "))
+		#openmpi
+		node.addService(rspec.Execute(shell="/bin/sh",
+						command="cd /usr/share/modules/modulefiles/ ; sudo mkdir python ; cd python ; wget https://raw.githubusercontent.com/DarrellBest/Distributed-And-Cluster-Computing/master/Cloudlab_Scripts/openmpi_db/2.1.0 "))							
 	else:
+		#gcc
 		node.addService(rspec.Execute(shell="/bin/sh",
-						command="cd /usr/share/modules/modulefiles/ ; sudo mkdir gcc ; cd gcc ; "))	
+						command="cd /usr/share/modules/modulefiles/ ; sudo mkdir gcc ; cd gcc ; wget https://raw.githubusercontent.com/DarrellBest/Distributed-And-Cluster-Computing/master/Cloudlab_Scripts/gcc_node/6.3.0 "))
+		#python
+		node.addService(rspec.Execute(shell="/bin/sh",
+						command="cd /usr/share/modules/modulefiles/ ; sudo mkdir python ; cd python ; wget https://raw.githubusercontent.com/DarrellBest/Distributed-And-Cluster-Computing/master/Cloudlab_Scripts/python_node/2.7.13 "))
+		#openmpi
+		node.addService(rspec.Execute(shell="/bin/sh",
+						command="cd /usr/share/modules/modulefiles/ ; sudo mkdir python ; cd python ; wget https://raw.githubusercontent.com/DarrellBest/Distributed-And-Cluster-Computing/master/Cloudlab_Scripts/openmpi_node/2.1.0 "))
 # Print the RSpec to the enclosing page.
 portal.context.printRequestRSpec(request)

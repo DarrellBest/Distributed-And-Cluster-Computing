@@ -1,0 +1,14 @@
+#%Module1.0
+proc ModulesHelp { } {
+global dotversion
+ 
+puts stderr "\topenmpi 2.1.0 (openmpi)"
+}
+ 
+module-whatis "openmpi 2.1.0 (openmpi)"
+conflict openmpi
+prepend-path PATH /nfs/packages/openmpi/2.1.0/bin
+prepend-path LD_LIBRARY_PATH /nfs/packages/openmpi/2.1.0/lib
+prepend-path LIBRARY_PATH /nfs/packages/openmpi/2.1.0/lib
+prepend-path MANPATH /nfs/packages/openmpi/2.1.0/man
+setenv OM openmpi
