@@ -1,14 +1,58 @@
-#%Module1.0
-proc ModulesHelp { } {
-global dotversion
- 
-puts stderr "\topenmpi 2.1.0 (openmpi)"
+
+#%Module1.0##
+
+module-whatis   "Set up environment for the OpenMPI libraries (autoselect interconnect)"
+
+# for Tcl script use only
+set     version      "3.2.10"
+
+prereq gcc intel pgi
+
+setenv OMPI_VERSION "2.1.0"
+
+# this will silence errors about missing mx or ib drivers
+setenv OMPI_MCA_mca_base_component_show_load_errors 0
+
+if [ info exists env(CC) ] {
+   setenv OMPI_CC  "$env(CC)"
 }
- 
-module-whatis "openmpi 2.1.0 (openmpi)"
-conflict openmpi
-prepend-path PATH /packages/openmpi/2.1.0/bin
-prepend-path LD_LIBRARY_PATH /packages/openmpi/2.1.0/lib
-prepend-path LIBRARY_PATH /packages/openmpi/2.1.0/lib
-prepend-path MANPATH /packages/openmpi/2.1.0/man
-setenv OM openmpi
+if [ info exists env(CXX) ] {
+   setenv OMPI_CXX "$env(CXX)"
+}
+if [ info exists env(F77) ] {
+   setenv OMPI_F77 "$env(F77)"
+}
+if [ info exists env(F90) ] {
+   setenv OMPI_FC "$env(F90)"
+}
+
+
+if [ is-loaded gcc ] {
+  setenv MPI_DIR "/packages/openmpi/$env(OMPI_VERSION)_gcc610"
+} elseif [ is-loaded intel ] {
+  setenv MPI_DIR "/packages/openmpi/$env(OMPI_VERSION)_intel160"
+}
+
+
+prepend-path  PATH                 "$env(MPI_DIR)/bin"
+prepend-path  LD_LIBRARY_PATH      "$env(MPI_DIR)/lib"
+prepend-path  MANPATH              "$env(MPI_DIR)/share/man"
+prepend-path  LIBRARY_PATH         "$env(MPI_DIR)/lib"
+prepend-path  C_INCLUDE_PATH       "$env(MPI_DIR)/include"
+prepend-path  CPLUS_INCLUDE_PATH   "$env(MPI_DIR)/include"
+
+# OpenMPI in versions > 1.8.x do not support Myrinet interface,
+# we need to use eth0 on MX nodes
+if [ file exists "/sys/class/infiniband/mlx4_0" ] {
+  module add openmpi/$env(OMPI_VERSION)-mlx
+} elseif [ file exists "/sys/class/infiniband/mlx5_0" ] {
+  module add openmpi/$env(OMPI_VERSION)-mlx
+} elseif [ file exists "/sys/class/infiniband/qib0" ] {
+  module add openmpi/$env(OMPI_VERSION)-qib
+} else {
+  module add openmpi/$env(OMPI_VERSION)-eth
+}
+
+if [ module-info mode display ] {
+        ModulesHelp
+}

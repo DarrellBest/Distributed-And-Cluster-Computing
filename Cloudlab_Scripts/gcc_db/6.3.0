@@ -1,18 +1,45 @@
-#%Module1.0
+#%Module1.0#####################################################################
+##
+## gcc/6.3.0  modulefile
+##
 proc ModulesHelp { } {
-global dotversion
- 
-puts stderr "\tGCC 6.3.0 (gcc, g++, gfortran)"
+        global version
+
+        puts stderr "\n\tgcc/6.3.0 module"
+        puts stderr "\t****************************************************"
+        puts stderr "\n\t  This module sets up the following environment"
+        puts stderr "\t  variables for the GNU compilers:"
+        puts stderr "\t      PATH"
+        puts stderr "\t      LD_LIBRARY_PATH"
+        puts stderr "\t      MANPATH"
+        puts stderr "\n\t  Version $version\n"
+        puts stderr "\t****************************************************\n"
 }
- 
-module-whatis "GCC 6.3.0 (gcc, g++, gfortran)"
-conflict gcc
-prepend-path PATH /packages/gcc/4.6.2/bin
-prepend-path LD_LIBRARY_PATH /packages/gcc/4.6.2/lib64
-prepend-path LIBRARY_PATH /packages/gcc/4.6.2/lib64
-prepend-path MANPATH /packages/gcc/4.6.2/man
-setenv CC gcc
-setenv CXX g++
-setenv FC gfortran
-setenv F77 gfortran
-setenv F90 gfortran
+
+conflict gcc intel
+
+module-whatis   "Set up environment for GNU 6.3.0 compilers"
+
+# for Tcl script use only
+set     version      "3.2.10"
+
+# Make sure no other hpc modulefiles are loaded before loading this module
+eval set [ array get env MODULESHOME ]
+
+prepend-path    PATH                    /packages/gcc/6.3.0/bin
+prepend-path    LIBRARY_PATH            /packages/gcc/6.3.0/lib64
+prepend-path    LD_LIBRARY_PATH         /packages/gcc/6.3.0/lib64
+prepend-path    CPLUS_INCLUDE_PATH      /packages/gcc/6.3.0/include/c++/6.3.0
+prepend-path    MANPATH                 /packages/gcc/6.3.0/share/man
+
+setenv   CC  gcc
+setenv   CXX g++
+setenv   F77 gfortran
+setenv   F90 gfortran
+
+
+setenv  COMPILER_MODULE  "gcc/6.3.0"
+
+if [ module-info mode display ] {
+        ModulesHelp
+}

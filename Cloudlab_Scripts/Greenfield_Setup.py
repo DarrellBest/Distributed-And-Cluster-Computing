@@ -255,7 +255,7 @@ for i in range(params.workerCount + 2):
 						command="cd /usr/share/modules/modulefiles/ ; sudo mkdir python ; cd python ;sudo wget https://raw.githubusercontent.com/DarrellBest/Distributed-And-Cluster-Computing/master/Cloudlab_Scripts/python_db/2.7.13 "))
 		#openmpi
 		node.addService(rspec.Execute(shell="/bin/sh",
-						command="cd /usr/share/modules/modulefiles/ ; sudo mkdir python ; cd python ;sudo wget https://raw.githubusercontent.com/DarrellBest/Distributed-And-Cluster-Computing/master/Cloudlab_Scripts/openmpi_db/2.1.0 "))							
+						command="cd /usr/share/modules/modulefiles/ ; sudo mkdir openmpi ; cd openmpi ;sudo wget https://raw.githubusercontent.com/DarrellBest/Distributed-And-Cluster-Computing/master/Cloudlab_Scripts/openmpi_db/2.1.0 "))							
 	else:
 		#gcc
 		node.addService(rspec.Execute(shell="/bin/sh",
@@ -265,6 +265,6 @@ for i in range(params.workerCount + 2):
 						command="cd /usr/share/modules/modulefiles/ ; sudo mkdir python ; cd python ;sudo wget https://raw.githubusercontent.com/DarrellBest/Distributed-And-Cluster-Computing/master/Cloudlab_Scripts/python_node/2.7.13 "))
 		#openmpi
 		node.addService(rspec.Execute(shell="/bin/sh",
-						command="cd /usr/share/modules/modulefiles/ ; sudo mkdir python ; cd python ;sudo wget https://raw.githubusercontent.com/DarrellBest/Distributed-And-Cluster-Computing/master/Cloudlab_Scripts/openmpi_node/2.1.0 "))
+						command="cd /usr/share/modules/modulefiles/ ; sudo mkdir openmpi ; cd openmpi ;sudo wget https://raw.githubusercontent.com/DarrellBest/Distributed-And-Cluster-Computing/master/Cloudlab_Scripts/openmpi_node/2.1.0 "))
 # Print the RSpec to the enclosing page.
 portal.context.printRequestRSpec(request)

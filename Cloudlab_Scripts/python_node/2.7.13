@@ -1,14 +1,36 @@
-#%Module1.0
+#%Module1.0#####################################################################
+##
+## python/2.7.13  modulefile
+##
 proc ModulesHelp { } {
-global dotversion
- 
-puts stderr "\tPython 2.7.13 (python2)"
+        global version
+
+        puts stderr "\n\tpython module"
+        puts stderr "\t****************************************************"
+        puts stderr "\n\t  This module sets up the following environment"
+        puts stderr "\t  variables for the R libraries:"
+        puts stderr "\t      PATH"
+        puts stderr "\t      LD_LIBRARY_PATH"
+        puts stderr "\t      MANPATH"
+        puts stderr "\t      LIBRARY_PATH"
+        puts stderr "\n\t  Version $version\n"
+        puts stderr "\t****************************************************\n"
 }
- 
-module-whatis "Python 2.7.13 (python2)"
-conflict python
-prepend-path PATH /nfs/packages/python/2.7.13/bin
-prepend-path LD_LIBRARY_PATH /nfs/packages/python/2.7.13/lib
-prepend-path LIBRARY_PATH /nfs/packages/python/2.7.13/lib
-prepend-path MANPATH /nfs/packages/python/2.7.13/man
-setenv PY2 python2
+
+module-whatis   "Set up environment for python"
+
+# for Tcl script use only
+set     version      "3.2.10"
+
+# Make sure no other hpc modulefiles are loaded before loading this module
+eval set [ array get env MODULESHOME ]
+
+prepend-path  PATH                 "/nfs/packages/python/2.7.13/bin"
+prepend-path  MANPATH              "/nfs/packages/python/2.7.13/share/man"
+prepend-path  C_INCLUDE_PATH       "/nfs/packages/python/2.7.13/include"
+prepend-path  PKG_CONFIG_PATH      "/nfs/packages/python/2.7.13/lib/pkgconfig"
+append-path   LD_LIBRARY_PATH      "/usr/local/lib"
+
+if [ module-info mode display ] {
+        ModulesHelp
+}
