@@ -16,6 +16,6 @@ This emulated Greenfield infrastructure is deployed with a Python script that in
 1) Keyless SSH
 2) Torque Resource Manager (for job management/scheduling)
 3) A Network File System (to emulate Greenfield's PSC NFS)
-4) Python and OpenMPI (and relevant dependencies)
+4) Python and OpenMPI (and relevant dependencies, including gcc)
 
 ### Validation Results
