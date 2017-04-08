@@ -6,7 +6,7 @@ module-whatis   "Set up environment for the OpenMPI libraries (autoselect interc
 # for Tcl script use only
 set     version      "3.2.10"
 
-prereq gcc intel pgi
+prereq gcc
 
 setenv OMPI_VERSION "2.1.0"
 
@@ -26,9 +26,8 @@ if [ info exists env(F90) ] {
    setenv OMPI_FC "$env(F90)"
 }
 
-if [ is-loaded gcc ] {
-  setenv MPI_DIR "/packages/openmpi/2.1.0
-}
+setenv MPI_DIR "/packages/openmpi/2.1.0
+
 
 prepend-path  PATH                 "/packages/openmpi/2.1.0/bin"
 prepend-path  LD_LIBRARY_PATH      "/packages/openmpi/2.1.0/lib"
