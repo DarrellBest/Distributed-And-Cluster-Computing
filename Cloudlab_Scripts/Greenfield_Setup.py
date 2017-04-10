@@ -67,8 +67,6 @@ for i in range(params.workerCount + 2):
 									command="sudo apt-get install -y python-setuptools python-pip"))
 	node.addService(rspec.Execute(shell="/bin/sh",
 									command="sudo apt-get install -y mpich"))
-	node.addService(rspec.Execute(shell="/bin/sh",
-									command="sudo su; cd /etc/ssh/; rm sshd_config; wget https://raw.githubusercontent.com/DarrellBest/Distributed-And-Cluster-Computing/master/Cloudlab_Scripts/ssh_config"))
 	if i == 1:
 		# install nfs server
 		node.addService(rspec.Execute(shell="/bin/sh",
