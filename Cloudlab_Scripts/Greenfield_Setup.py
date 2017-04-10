@@ -63,6 +63,8 @@ for i in range(params.workerCount + 2):
 									command="sudo adduser greenfield sudo"))
 	node.addService(rspec.Execute(shell="/bin/sh",
 									command="sudo apt-get update"))
+	node.addService(rspec.Execute(shell="/bin/sh",
+									command="sudo apt-get install -y python-setuptools python-pip"))
 	if i == 1:
 		# install nfs server
 		node.addService(rspec.Execute(shell="/bin/sh",
