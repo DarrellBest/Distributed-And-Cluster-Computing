@@ -83,15 +83,15 @@ for i in range(params.workerCount + 2):
 								command="echo '/packages *(rw,sync,no_root_squash)' | sudo tee -a /etc/exports"))			
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo systemctl restart nfs-kernel-server"))
-		#shared ssh keys
-		#node.addService(rspec.Execute(shell="/bin/sh",
-		#						command="mkdir /home/.ssh"))								
-		#node.addService(rspec.Execute(shell="/bin/sh",
-		#						command="ssh-keygen -t rsa -P '' -f '/home/.ssh/id_rsa' "))
-		#node.addService(rspec.Execute(shell="/bin/sh",
-		#						command="sudo chmod 777 /home/.ssh"))		
-		#node.addService(rspec.Execute(shell="/bin/sh",
-		#						command="cp /home/.ssh/id_rsa.pub /home/.ssh/authorized_keys"))
+		shared ssh keys
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="mkdir /home/.ssh"))								
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="ssh-keygen -t rsa -P '' -f '/home/.ssh/id_rsa' "))
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="sudo chmod 777 /home/.ssh"))		
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="cp /home/.ssh/id_rsa.pub /home/.ssh/authorized_keys"))
 	else:
 	# install nfs client
 		node.addService(rspec.Execute(shell="/bin/sh",
