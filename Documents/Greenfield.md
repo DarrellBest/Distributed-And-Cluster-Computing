@@ -13,7 +13,7 @@ Our controllerHost node acts as an XSEDE "node001" for our cluster - the head no
 ### Deployment Script
 This emulated Greenfield infrastructure is deployed with a Python script that instantiates the network topology described above using CloudLab's geni-lib. While Greenfield operates on CentOS, we chose to deploy our architecture using Ubuntu16 in lieu of CentOS66 - largely for ease-of-use and setup on our end. Listed below are the additional features deployed through our script.
 
-First our script deploys a network file system with the aim of allowing the head node and the slave nodes to communicate through file sharing. An NFS server is installed on the head node (controllerHost) and NFS clients are installed on the slave nodes. 
+First our script deploys a network file system with the aim of allowing the head node and the slave nodes to communicate through file sharing. An NFS server is installed on the head node (controllerHost) and NFS clients are installed on the slave nodes. Once the NFS is established, shared directories are mounted and utilized for sharing elements like packages and valid SSH keys.
 
 1) Keyless SSH
 2) Torque Resource Manager (for job management/scheduling)
