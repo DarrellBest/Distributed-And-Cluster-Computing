@@ -21,7 +21,7 @@ for line in sys.stdin:
             current_index = index
     else:
         if current_task:
-            task_list.append((current_task, current_index))
+            task_list.append((current_task, current_index+1))
         current_task = task
         current_index = index
         
