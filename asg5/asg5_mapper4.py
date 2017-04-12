@@ -6,7 +6,7 @@ for line in sys.stdin:
     
     try:
         jobID = line[2]
-        cpuTime = line[13] + line[5]
+        cpuTime = line[5]
     except ValueError:
         continue
     
