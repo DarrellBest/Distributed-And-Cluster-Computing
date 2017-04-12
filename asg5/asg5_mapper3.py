@@ -6,7 +6,8 @@ for line in sys.stdin:
     
     try:
         jobID = line[2]
+        taskID = line[3]
     except ValueError:
         continue
     
-    print("%s\t%s" %(jobID, 1))
+    print("%s\t%s" %(jobID, taskID))
