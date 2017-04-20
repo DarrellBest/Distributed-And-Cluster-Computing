@@ -21,11 +21,7 @@ params = pc.bindParameters()
 
 tourDescription = "This profile is based off of the Greenfield Cluster with some changes to make it more compatible with Cloudlab."
 
-tourInstructions = \
-	"""
-### Basic Instructions
-Once your experiment nodes have booted, and this profile's configuration scripts have finished deploying HPCCSystems inside your experiment, you'll be able to visit [the ECLWatch interface](http://{host-%s}:8010) (approx. 5-15 minutes).  
-""" % (params.controllerHost)
+tourInstructions = "This is a simulation of the Greenfield Cluster at https://www.psc.edu/index.php/greenfield. Unfortunately at this time you can only use 3 worker nodes. To use connect to the controller host node and submit your pbs script."
 
 #
 # Setup the Tour info with the above description and instructions.
@@ -68,39 +64,41 @@ for i in range(params.workerCount + 2):
 	node.addService(rspec.Execute(shell="/bin/sh",
 									command="sudo apt-get install -y mpich"))
 	if i == 1:
-		# install nfs server
+	# install nfs server
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo apt-get install -y nfs-kernel-server"))
+		#give permissions to home folder so anyone may access (not secure though)
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo chmod 777 /home"))
+		#append to exports share info for home so nfs server knows what to share
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="echo '/home *(rw,sync,no_root_squash)' | sudo tee -a /etc/exports"))
+		#make packages directory
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo mkdir /packages"))
+		#give it permissions same thing as home
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo chmod 777 /packages"))
+		#append to exports so that nfs server can share it
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="echo '/packages *(rw,sync,no_root_squash)' | sudo tee -a /etc/exports"))			
+								command="echo '/packages *(rw,sync,no_root_squash)' | sudo tee -a /etc/exports"))
+		#restart nfs server so all configs and exports are reloaded			
 		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo systemctl restart nfs-kernel-server"))
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="mkdir /home/.ssh"))								
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="ssh-keygen -t rsa -P '' -f '/home/.ssh/id_rsa' "))
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo chmod 777 /home/.ssh"))		
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="cp /home/.ssh/id_rsa.pub /home/.ssh/authorized_keys"))
+								command="sudo systemctl restart nfs-kernel-server"))								
 	else:
 	# install nfs client
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo apt-get install -y nfs-common"))
-		node.addService(rspec.Execute(shell="/bin/sh",
-								command="sudo mkdir -p /nfs/home"))
+		#make /nfs/packages folder for mount location
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo mkdir -p /nfs/packages"))
+		#make /nfs/home folder for mount location
+		node.addService(rspec.Execute(shell="/bin/sh",
+								command="sudo mkdir -p /nfs/home"))
+		#mount home from database node
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo mount 192.168.1.2:/home /nfs/home"))
+		#mount packages from database node
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo mount 192.168.1.2:/packages /nfs/packages"))
 													
@@ -142,12 +140,12 @@ for i in range(params.workerCount + 2):
 								command="echo 'node3 np=50' | sudo tee -a /var/spool/torque/server_priv/nodes"))
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="echo 'node4 np=50' | sudo tee -a /var/spool/torque/server_priv/nodes"))								
-		#configure mom
+		#configure mom by allowing root to edit and copying output files back to where the were ran from inside the /nfs/home directory
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="echo 'root@controllerHost-lan' | sudo tee -a /var/spool/torque/mom_priv/config"))
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="echo '\$usecp *:/nfs/home /nfs/home' | sudo tee -a /var/spool/torque/mom_priv/config"))
-		#start torque
+		#start torque and newly made server configs
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="sudo service torque-mom start"))
 		node.addService(rspec.Execute(shell="/bin/sh",
@@ -205,9 +203,10 @@ for i in range(params.workerCount + 2):
 	node.addService(rspec.Execute(shell="/bin/sh",
 							command="sudo apt-get install -y environment-modules"))
 
-	#install programs to modules 
+	#install programs to modules
+	#These are all pretty much the same so the general idea is wget the tar ball files, make a module directory for them in packages, configure them for the packages directory, finally build them 
 	if i == 1:
-		#gcc
+		#gcc and some dependencies
 		node.addService(rspec.Execute(shell="/bin/sh",
 								command="wget -P /packages/gcc/ mirrors-usa.go-parts.com/gcc/releases/gcc-6.3.0/gcc-6.3.0.tar.gz"))	
 		node.addService(rspec.Execute(shell="/bin/sh",
@@ -249,6 +248,8 @@ for i in range(params.workerCount + 2):
 
 								
 	#install module files
+	#Same as above these are all the same so the idea is make a directory for them in default location (/usr/share/modules/modulefiles), wget the files to that location.
+	#The database uses /packages while the nodes use /nfs/packages. That is why there are two sets of them
 	if i == 1 :
 		#gcc
 		node.addService(rspec.Execute(shell="/bin/sh",
